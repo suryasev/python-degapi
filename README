@@ -1,0 +1,7 @@
+This is a python gdata extension for the Google Analytics Data Export API
+
+Installation Instructions:
+
+Install gdata from http://code.google.com/p/gdata-python-client/downloads/list
+After installation, copy the analytics folder into the installed gdata folder on your machine.
+
