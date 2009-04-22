@@ -65,8 +65,8 @@ tar xvfz gdata-1.3.0.tar.gz <br>
 # git clone this repository into the gdata installation folder<br>
 cd gdata-1.3.0/src/gdata/<br>
 git clone git://github.com/suryasev/python-degapi.git analytics<br>
-cd ../..<br>
 # add the 'gdata.analytics' package to setup.py <br>
+cd ../..<br>
 sed "s/'gdata.base'/'gdata.base', 'gdata.analytics'/g" setup.py > setup_analytics.py<br>
 sudo python setup_analytics.py install</p>
 
