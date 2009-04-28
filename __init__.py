@@ -47,6 +47,12 @@ class Property(gdata.GDataEntry):
     self.name = name
     self.value = value
     super(Property, self).__init__(*args, **kwargs)
+    
+  def __str__(self):
+    return self.value
+      
+  def __repr__(self):
+    return self.value
 
 class AccountListEntry(gdata.GDataEntry):
   """The Google Documents version of an Atom Entry"""
@@ -126,7 +132,13 @@ class Dimension(gdata.GDataEntry):
     self.value = value
     self.type = type
     self.confidence_interval = confidence_interval
-    super(Dimension, self).__init__(*args, **kwargs)    
+    super(Dimension, self).__init__(*args, **kwargs)   
+    
+  def __str__(self):
+    return self.value
+
+  def __repr__(self):
+    return self.value 
     
 class Metric(gdata.GDataEntry):
   _tag = 'metric'
@@ -146,7 +158,12 @@ class Metric(gdata.GDataEntry):
     self.type = type
     self.confidence_interval = confidence_interval
     super(Metric, self).__init__(*args, **kwargs)
-  
+    
+  def __str__(self):
+    return self.value
+
+  def __repr__(self):
+    return self.value
   
 class AnalyticsDataEntry(gdata.GDataEntry):
   """The Google Analytics version of an Atom Entry"""
