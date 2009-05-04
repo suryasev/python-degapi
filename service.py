@@ -215,69 +215,67 @@ class AnalyticsDataService(gdata.service.GDataService):
     return self.QueryAccountListFeed(q.ToUri())
 
 class DataQuery(gdata.service.Query):
-    """Object used to construct a URI to a data feed"""
-    def __init__(self, feed='/feeds/data', text_query=None, 
-                 params=None, categories=None, ids="",
-                 dimensions="", metrics="", sort="", filters="",
-                 start_date="", end_date="", start_index="",
-                 max_results=""):
-        """Constructor for Analytics List Query
+  """Object used to construct a URI to a data feed"""
+  def __init__(self, feed='/feeds/data', text_query=None, 
+               params=None, categories=None, ids="",
+               dimensions="", metrics="", sort="", filters="",
+               start_date="", end_date="", start_index="",
+               max_results=""):
+    """Constructor for Analytics List Query
 
-        Args:
-          feed: string (optional) The path for the feed. (e.g. '/feeds/data')
+    Args:
+      feed: string (optional) The path for the feed. (e.g. '/feeds/data')
 
-          text_query: string (optional) The contents of the q query parameter. This
-                      string is URL escaped upon conversion to a URI.
-          params: dict (optional) Parameter value string pairs which become URL
-                  params when translated to a URI. These parameters are added to
-                  the query's items.
-          categories: list (optional) List of category strings which should be
-                  included as query categories. See gdata.service.Query for
-                  additional documentation.
-          ids: comma-separated string of analytics accounts to use for pulling data.
-          dimensions: comma-separated string of dimensions to use for pulling data.
-          metrics: comma-separated string of metrics to use for pulling data.
-          sort: comma-separated string of dimensions and metrics to use for sorting.
-                This may be previxed with a minus to sort in reverse order (e.g. '-ga:keyword').
-                If ommited, the first dimension passed in will be used.
-          filters: comma-separated string of filter parameters (e.g. 'ga:keyword==google').
-          start_date: start date for data pull.
-          end_date: end date for data pull.
-          start_index: used in combination with max_results to pull more than 1000 entries.
-                       This defaults to 1.
-          max_results: maximum results that the pull will return.  This defaults to,
-                       and maxes out at 1000.
+      text_query: string (optional) The contents of the q query parameter. This
+                  string is URL escaped upon conversion to a URI.
+      params: dict (optional) Parameter value string pairs which become URL
+              params when translated to a URI. These parameters are added to
+              the query's items.
+      categories: list (optional) List of category strings which should be
+              included as query categories. See gdata.service.Query for
+              additional documentation.
+      ids: comma-separated string of analytics accounts to use for pulling data.
+      dimensions: comma-separated string of dimensions to use for pulling data.
+      metrics: comma-separated string of metrics to use for pulling data.
+      sort: comma-separated string of dimensions and metrics to use for sorting.
+            This may be previxed with a minus to sort in reverse order (e.g. '-ga:keyword').
+            If ommited, the first dimension passed in will be used.
+      filters: comma-separated string of filter parameters (e.g. 'ga:keyword==google').
+      start_date: start date for data pull.
+      end_date: end date for data pull.
+      start_index: used in combination with max_results to pull more than 1000 entries.
+                   This defaults to 1.
+      max_results: maximum results that the pull will return.  This defaults to,
+                   and maxes out at 1000.
 
-        Yields:
-          A DocumentQuery object used to construct a URI based on the Document
-          List feed.
-        """
-        self.elements = {'ids': ids,
-                         'dimensions': dimensions,
-                         'metrics': metrics,
-                         'sort': sort,
-                         'filters': filters,
-                         'start-date': start_date,
-                         'end-date': end_date}
-        if start_index:
-            self.elements['start-index'] = start_index
-        if max_results:
-            self.elements['max-results'] = max_results
-        
-        gdata.service.Query.__init__(self, feed, text_query, params, categories)
+    Yields:
+      A DocumentQuery object used to construct a URI based on the Document
+      List feed.
+    """
+    self.elements = {'ids': ids,
+                     'dimensions': dimensions,
+                     'metrics': metrics,
+                     'sort': sort,
+                     'filters': filters,
+                     'start-date': start_date,
+                     'end-date': end_date,
+                     'start-index': start_index,
+                     'max-results': max_results}
     
-    def ToUri(self):
-        """Generates a URI from the query parameters set in the object.
+    gdata.service.Query.__init__(self, feed, text_query, params, categories)
+  
+  def ToUri(self):
+    """Generates a URI from the query parameters set in the object.
 
-        Returns:
-          A string containing the URI used to retrieve entries from the Analytics
-          List feed.
-        """
-        old_feed = self.feed
-        self.feed = '/'.join([old_feed]) + '?' + urllib.urlencode(dict([(key, value) for key, value in self.elements.iteritems() if value]))
-        new_feed = gdata.service.Query.ToUri(self)
-        self.feed = old_feed
-        return new_feed
+    Returns:
+      A string containing the URI used to retrieve entries from the Analytics
+      List feed.
+    """
+    old_feed = self.feed
+    self.feed = '/'.join([old_feed]) + '?' + urllib.urlencode(dict([(key, value) for key, value in self.elements.iteritems() if value]))
+    new_feed = gdata.service.Query.ToUri(self)
+    self.feed = old_feed
+    return new_feed
 
 
 class AccountQuery(gdata.service.Query):
@@ -285,41 +283,41 @@ class AccountQuery(gdata.service.Query):
   def __init__(self, feed='/feeds/accounts', start_index=1,
                max_results=1000, username='default', text_query=None,
                params=None, categories=None):
-      """Constructor for Account List Query
-  
-      Args:
-        feed: string (optional) The path for the feed. (e.g. '/feeds/documents')
-        visibility: string (optional) The visibility chosen for the current feed.
-        projection: string (optional) The projection chosen for the current feed.
-        text_query: string (optional) The contents of the q query parameter. This
-                    string is URL escaped upon conversion to a URI.
-        params: dict (optional) Parameter value string pairs which become URL
-                params when translated to a URI. These parameters are added to
-                the query's items.
-        categories: list (optional) List of category strings which should be
-                included as query categories. See gdata.service.Query for
-                additional documentation.
-        username: string (deprecated) This value should now always be passed as 'default'.
-  
-      Yields:
-        A DocumentQuery object used to construct a URI based on the Document
-        List feed.
-      """
-      self.max_results = max_results
-      self.start_index = start_index
-      self.username = username
-      gdata.service.Query.__init__(self, feed, text_query, params, categories)
+    """Constructor for Account List Query
+
+    Args:
+      feed: string (optional) The path for the feed. (e.g. '/feeds/documents')
+      visibility: string (optional) The visibility chosen for the current feed.
+      projection: string (optional) The projection chosen for the current feed.
+      text_query: string (optional) The contents of the q query parameter. This
+                  string is URL escaped upon conversion to a URI.
+      params: dict (optional) Parameter value string pairs which become URL
+              params when translated to a URI. These parameters are added to
+              the query's items.
+      categories: list (optional) List of category strings which should be
+              included as query categories. See gdata.service.Query for
+              additional documentation.
+      username: string (deprecated) This value should now always be passed as 'default'.
+
+    Yields:
+      A DocumentQuery object used to construct a URI based on the Document
+      List feed.
+    """
+    self.max_results = max_results
+    self.start_index = start_index
+    self.username = username
+    gdata.service.Query.__init__(self, feed, text_query, params, categories)
   
   def ToUri(self):
-      """Generates a URI from the query parameters set in the object.
-  
-      Returns:
-        A string containing the URI used to retrieve entries from the Account
-        List feed.
-      """
-      old_feed = self.feed
-      self.feed = '/'.join([old_feed, self.username]) + '?' + '&'.join(['max-results=' + str(self.max_results), 
-                                                                        'start-index=' + str(self.start_index)])
-      new_feed = self.feed
-      self.feed = old_feed
-      return new_feed
+    """Generates a URI from the query parameters set in the object.
+
+    Returns:
+      A string containing the URI used to retrieve entries from the Account
+      List feed.
+    """
+    old_feed = self.feed
+    self.feed = '/'.join([old_feed, self.username]) + '?' + '&'.join(['max-results=' + str(self.max_results), 
+                                                                      'start-index=' + str(self.start_index)])
+    new_feed = self.feed
+    self.feed = old_feed
+    return new_feed
